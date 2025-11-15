@@ -15,6 +15,18 @@ import { Loader2 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import AutoLoginForm from '@/components/auth/auto-login-form';
 
+function generateId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return (
+    Math.random().toString(36).slice(2) +
+    '-' +
+    Date.now().toString(36)
+  );
+}
+
 interface DataContextProps {
   projects: Project[] | null;
   tasks: Task[] | null;
@@ -274,7 +286,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       if (!project) return null;
 
       const newPart: Part = {
-          id: crypto.randomUUID(),
+          id: generateId(),
           name: partName || `Nuevo Parte ${project.parts?.length || 0 + 1}`,
           stages: [],
           progress: 0,
